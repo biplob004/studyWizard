@@ -23,7 +23,7 @@ import {
   Home as HomeIcon,
 } from "@mui/icons-material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useRouter } from "next/navigation";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 // Define our data types
 interface FileItem {
@@ -48,6 +48,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function CoursesPage() {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const [items, setItems] = useState<FileItem[]>([]);
   const [currentPath, setCurrentPath] = useState<string>("");
@@ -55,8 +57,32 @@ export default function CoursesPage() {
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
 
   useEffect(() => {
+    // set course_path to selected path
+    const params = new URLSearchParams(window.location.search);
+    params.set("course_path", currentPath);
+    router.push(`${pathname}?${params.toString()}`);
+
     fetchItems(currentPath);
   }, [currentPath]);
+
+  // on load only once | refresh
+  useEffect(() => {
+    const course_path = searchParams.get("course_path");
+    navigateToBreadcrumb(course_path || "");
+  }, []);
+
+  // Helps to go back and forward
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const course_path = params.get("course_path") || "";
+      setCurrentPath(course_path);
+      setSelectedFile(null);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
 
   const fetchItems = async (path: string) => {
     setLoading(true);
@@ -65,7 +91,7 @@ export default function CoursesPage() {
         `${API_URL}/api/courses?path=${encodeURIComponent(path)}`
       );
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
 
       setItems(data.items);
     } catch (error) {
@@ -75,16 +101,19 @@ export default function CoursesPage() {
     }
   };
 
+  // Clicking on items, like folder or file
   const handleItemClick = (item: FileItem) => {
     if (item.type === "folder") {
       setCurrentPath(item.path);
       setSelectedFile(null);
     } else {
       setSelectedFile(item);
+      // Open another page, with selected course file
       router.push(`/course?course_path=${item.path.replace(/\.txt$/, "")}`);
     }
   };
 
+  // Clicking on nav eg: Home > English > chapter-1
   const navigateToBreadcrumb = (path: string) => {
     setCurrentPath(path);
     setSelectedFile(null);
@@ -113,7 +142,10 @@ export default function CoursesPage() {
             <Link
               color="inherit"
               href="#"
-              onClick={() => navigateToBreadcrumb("")}
+              onClick={(e) => {
+                e.preventDefault();
+                navigateToBreadcrumb("");
+              }}
               sx={{ display: "flex", alignItems: "center" }}
             >
               <HomeIcon sx={{ mr: 0.5 }} fontSize="small" />
@@ -127,7 +159,10 @@ export default function CoursesPage() {
                   key={path}
                   color="inherit"
                   href="#"
-                  onClick={() => navigateToBreadcrumb(path)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateToBreadcrumb(path);
+                  }}
                 >
                   {part}
                 </Link>

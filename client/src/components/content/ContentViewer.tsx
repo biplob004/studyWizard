@@ -1,5 +1,5 @@
 import { Box, Typography, CircularProgress, Alert } from "@mui/material";
-import MarkdownRenderer from "./MarkdownRenderer";
+// import MarkdownRenderer from "./MarkdownRenderer";
 import { Markdown } from "./MarkdownComp";
 import { Content } from "@/types";
 
