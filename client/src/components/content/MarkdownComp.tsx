@@ -20,10 +20,6 @@ const NonMemoizedMarkdown = ({ children }: { children: string }) => {
     theme.palette.mode === "dark"
       ? alpha(theme.palette.primary.main, 0.2)
       : alpha(theme.palette.primary.main, 0.1);
-  const tableOddRowBg =
-    theme.palette.mode === "dark"
-      ? alpha(theme.palette.background.default, 0.3)
-      : alpha(theme.palette.background.default, 0.3);
   const tableEvenRowBg =
     theme.palette.mode === "dark"
       ? alpha(theme.palette.background.paper, 0.5)

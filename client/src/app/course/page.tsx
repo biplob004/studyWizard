@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { Box, Paper, Typography, Divider } from "@mui/material";
 import ContentViewer from "@/components/content/ContentViewer";
 import NavigationButtons from "@/components/ui/NavigationButtons";
@@ -11,14 +11,13 @@ import { useContentNavigation } from "@/hooks/useContentNavigation";
 import { useTextSelection } from "@/hooks/useTextSelection";
 import { useSearchParams } from "next/navigation";
 
-// import language from "react-syntax-highlighter/dist/esm/languages/hljs/1c";
-
-export default function HomePage() {
+// Separate component that uses useSearchParams
+function CourseContent() {
   const searchParams = useSearchParams();
-  const course_path = searchParams.get("course_path") || "chapter-1";
+  const course_path = searchParams?.get("course_path") || "chapter-1";
 
   const [statusText, setStatusText] = useState("");
-  const { selectedText, clearSelection } = useTextSelection();
+  const { selectedText } = useTextSelection();
   const [voiceId, setVoiceId] = useState<string>("ash");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("English");
   const {
@@ -29,9 +28,7 @@ export default function HomePage() {
     navigatePrevious,
     hasNext,
     hasPrevious,
-  } = useContentNavigation(course_path, "intro"); // Start with an initial content ID
-
-  // console.log("======>>==", course_path);
+  } = useContentNavigation(course_path, "intro");
 
   const handleTranscriptionComplete = (text: string) => {
     setStatusText(`Your speech: ${text}`);
@@ -68,7 +65,6 @@ export default function HomePage() {
           p: 2,
           height: "100%",
           overflow: "auto",
-          // backgroundColor: "#f9f9f9",
           backgroundColor: "#4287f5",
         }}
       >
@@ -141,5 +137,14 @@ export default function HomePage() {
         </Paper>
       </Box>
     </Box>
+  );
+}
+
+// Main component wrapped with Suspense
+export default function HomePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CourseContent />
+    </Suspense>
   );
 }

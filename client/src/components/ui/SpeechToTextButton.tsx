@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Button, Box, CircularProgress } from "@mui/material";
 import MicIcon from "@mui/icons-material/Mic";
 import StopIcon from "@mui/icons-material/Stop";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+// import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import { speechToText } from "@/services/api";
 

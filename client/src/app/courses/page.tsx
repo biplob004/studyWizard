@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import {
   Box,
   Typography,
@@ -14,7 +14,6 @@ import {
   Link,
   CircularProgress,
   Container,
-  Divider,
 } from "@mui/material";
 import {
   Folder as FolderIcon,
@@ -46,7 +45,7 @@ const theme = createTheme({
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export default function CoursesPage() {
+function CoursesContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -63,13 +62,13 @@ export default function CoursesPage() {
     router.push(`${pathname}?${params.toString()}`);
 
     fetchItems(currentPath);
-  }, [currentPath]);
+  }, [currentPath, pathname, router]); // <-- Added pathname and router
 
   // on load only once | refresh
   useEffect(() => {
-    const course_path = searchParams.get("course_path");
+    const course_path = searchParams?.get("course_path");
     navigateToBreadcrumb(course_path || "");
-  }, []);
+  }, [searchParams]); // <-- Added searchParams
 
   // Helps to go back and forward
   useEffect(() => {
@@ -122,99 +121,113 @@ export default function CoursesPage() {
   const pathParts = currentPath.split("/").filter(Boolean);
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
-          <Typography
-            variant="h4"
-            component="h1"
-            gutterBottom
-            sx={{ fontWeight: "bold", color: "primary.main" }}
-          >
-            All courses
-          </Typography>
+    <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
+      <Typography
+        variant="h4"
+        component="h1"
+        gutterBottom
+        sx={{ fontWeight: "bold", color: "primary.main" }}
+      >
+        All courses
+      </Typography>
 
-          <Breadcrumbs
-            separator={<ChevronRightIcon fontSize="small" />}
-            aria-label="breadcrumb"
-            sx={{ mb: 3 }}
-          >
+      <Breadcrumbs
+        separator={<ChevronRightIcon fontSize="small" />}
+        aria-label="breadcrumb"
+        sx={{ mb: 3 }}
+      >
+        <Link
+          color="inherit"
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            navigateToBreadcrumb("");
+          }}
+          sx={{ display: "flex", alignItems: "center" }}
+        >
+          <HomeIcon sx={{ mr: 0.5 }} fontSize="small" />
+          Home
+        </Link>
+
+        {pathParts.map((part, index) => {
+          const path = pathParts.slice(0, index + 1).join("/");
+          return (
             <Link
+              key={path}
               color="inherit"
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                navigateToBreadcrumb("");
+                navigateToBreadcrumb(path);
               }}
-              sx={{ display: "flex", alignItems: "center" }}
             >
-              <HomeIcon sx={{ mr: 0.5 }} fontSize="small" />
-              Home
+              {part}
             </Link>
+          );
+        })}
+      </Breadcrumbs>
 
-            {pathParts.map((part, index) => {
-              const path = pathParts.slice(0, index + 1).join("/");
-              return (
-                <Link
-                  key={path}
-                  color="inherit"
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigateToBreadcrumb(path);
-                  }}
-                >
-                  {part}
-                </Link>
-              );
-            })}
-          </Breadcrumbs>
-
-          <Box sx={{ display: "flex", gap: 3 }}>
-            <Paper
-              elevation={2}
-              sx={{
-                width: "100%",
-                maxHeight: "70vh",
-                overflow: "auto",
-                borderRadius: 1,
-              }}
-            >
-              {loading ? (
-                <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
-                  <CircularProgress />
-                </Box>
+      <Box sx={{ display: "flex", gap: 3 }}>
+        <Paper
+          elevation={2}
+          sx={{
+            width: "100%",
+            maxHeight: "70vh",
+            overflow: "auto",
+            borderRadius: 1,
+          }}
+        >
+          {loading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <List>
+              {items.length === 0 ? (
+                <ListItem>
+                  <ListItemText primary="No items found" />
+                </ListItem>
               ) : (
-                <List>
-                  {items.length === 0 ? (
-                    <ListItem>
-                      <ListItemText primary="No items found" />
-                    </ListItem>
-                  ) : (
-                    items.map((item) => (
-                      <ListItem key={item.path} disablePadding>
-                        <ListItemButton
-                          onClick={() => handleItemClick(item)}
-                          selected={selectedFile?.path === item.path}
-                        >
-                          <ListItemIcon>
-                            {item.type === "folder" ? (
-                              <FolderIcon color="primary" />
-                            ) : (
-                              <FileIcon color="secondary" />
-                            )}
-                          </ListItemIcon>
-                          <ListItemText primary={item.name} />
-                        </ListItemButton>
-                      </ListItem>
-                    ))
-                  )}
-                </List>
+                items.map((item) => (
+                  <ListItem key={item.path} disablePadding>
+                    <ListItemButton
+                      onClick={() => handleItemClick(item)}
+                      selected={selectedFile?.path === item.path}
+                    >
+                      <ListItemIcon>
+                        {item.type === "folder" ? (
+                          <FolderIcon color="primary" />
+                        ) : (
+                          <FileIcon color="secondary" />
+                        )}
+                      </ListItemIcon>
+                      <ListItemText primary={item.name} />
+                    </ListItemButton>
+                  </ListItem>
+                ))
               )}
-            </Paper>
-          </Box>
+            </List>
+          )}
         </Paper>
-      </Container>
+      </Box>
+    </Paper>
+  );
+}
+
+export default function CoursesPage() {
+  return (
+    <ThemeProvider theme={theme}>
+      <Suspense
+        fallback={
+          <Container maxWidth="lg" sx={{ py: 4 }}>
+            <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
+              <CircularProgress />
+            </Box>
+          </Container>
+        }
+      >
+        <CoursesContent />
+      </Suspense>
     </ThemeProvider>
   );
 }

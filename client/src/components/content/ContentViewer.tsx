@@ -71,7 +71,7 @@ export default function ContentViewer({
         {content.title}
       </Typography>
       {/* <MarkdownRenderer markdown={content.markdown} /> */}
-      <Markdown children={content.markdown} />
+      <Markdown>{content.markdown}</Markdown>
     </Box>
   );
 }

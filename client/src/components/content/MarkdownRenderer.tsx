@@ -60,13 +60,11 @@ export default function MarkdownRenderer({ markdown }: MarkdownRendererProps) {
           rehypePlugins={[rehypeKatex]}
           components={{
             code({
-              node,
               inline,
               className,
               children,
               ...props
             }: {
-              node?: any;
               inline?: boolean;
               className?: string;
               children?: React.ReactNode;

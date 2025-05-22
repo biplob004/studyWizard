@@ -1,19 +1,21 @@
-import Document, { Html, Head, Main, NextScript } from "next/document";
+import Document, {
+  Html,
+  Head,
+  Main,
+  NextScript,
+  DocumentContext,
+  DocumentInitialProps,
+} from "next/document";
 import createEmotionServer from "@emotion/server/create-instance";
 import createCache from "@emotion/cache";
-import { EmotionCache } from "@emotion/cache";
 import { AppType } from "next/app";
-import { DocumentContext, DocumentInitialProps } from "next/document";
+import React, { JSX } from "react";
 
 interface MyDocumentProps extends DocumentInitialProps {
-  emotionStyleTags: any[];
+  emotionStyleTags: JSX.Element[];
 }
 
-const cache: EmotionCache = createCache({
-  key: "css",
-  prepend: true, // This ensures styles are prepended to the <head>, which is better for SSR
-});
-
+const cache = createCache({ key: "css", prepend: true });
 const { extractCritical } = createEmotionServer(cache);
 
 export default class MyDocument extends Document<MyDocumentProps> {

@@ -23,19 +23,19 @@ export const useContentNavigation = (initialCoursePath:string, initialContentId:
 
   useEffect(() => {
     loadContent(initialCoursePath, initialContentId);
-  }, [initialContentId, loadContent]);
+  }, [initialCoursePath, initialContentId, loadContent]);
 
   const navigateNext = useCallback(() => {
     if (content?.nextId) {
       loadContent(initialCoursePath, content.nextId);
     }
-  }, [content, loadContent]);
+  }, [content, loadContent, initialCoursePath]);
 
   const navigatePrevious = useCallback(() => {
     if (content?.previousId) {
       loadContent(initialCoursePath, content.previousId);
     }
-  }, [content, loadContent]);
+  }, [content, loadContent, initialCoursePath]);
 
   return {
     content,
