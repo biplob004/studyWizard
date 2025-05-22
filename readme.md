@@ -20,11 +20,11 @@ cd studyWizard
 ### 🐍 2. Create a Conda Environment
 
 ```bash
-conda create --name wiard python=3.11
-conda activate wiard
+conda create --name wizard python=3.11
+conda activate wizard
 ```
 
-Replace `wiard` with a name you prefer for the environment.
+Replace `wizard` with a name you prefer for the environment.
 
 ---
 
