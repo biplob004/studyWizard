@@ -68,6 +68,18 @@ function CourseContent() {
           backgroundColor: "#4287f5",
         }}
       >
+        <Paper elevation={2} sx={{ p: 2, mt: 3, backgroundColor: "#32eeff" }}>
+          <Typography variant="h6" gutterBottom>
+            Navigation
+          </Typography>
+          <NavigationButtons
+            onNext={navigateNext}
+            onPrevious={navigatePrevious}
+            hasNext={hasNext}
+            hasPrevious={hasPrevious}
+          />
+        </Paper>
+
         <Paper elevation={2} sx={{ p: 2, mb: 3, backgroundColor: "#32eeff" }}>
           <Typography variant="h6" gutterBottom>
             Text Interaction
@@ -122,18 +134,6 @@ function CourseContent() {
               </Paper>
             </Box>
           )}
-        </Paper>
-
-        <Paper elevation={2} sx={{ p: 2, mt: 3, backgroundColor: "#32eeff" }}>
-          <Typography variant="h6" gutterBottom>
-            Navigation
-          </Typography>
-          <NavigationButtons
-            onNext={navigateNext}
-            onPrevious={navigatePrevious}
-            hasNext={hasNext}
-            hasPrevious={hasPrevious}
-          />
         </Paper>
       </Box>
     </Box>

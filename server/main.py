@@ -159,7 +159,7 @@ async def convert_text_to_speech(request: TextToSpeechRequest, background_tasks:
         if not filename:
             raise HTTPException(status_code=500, detail="Failed to generate speech")
         
-        return {"audioUrl": f"{os.environ.get('server_base_url')}/audio/{filename}"}
+        return {"audioUrl": f"/audio/{filename}"}
     except Exception as e:
         # print('================', e)
         raise HTTPException(status_code=500, detail=f"Error in text-to-speech conversion: {str(e)}")
@@ -199,7 +199,7 @@ async def convert_speech_to_text( audio: UploadFile = File(...), selectedText: s
         llm_response_text = reading_validator(llm_client, original_sentence=selectedText, sentence_read=transcription.text, language=language)
         filename = generate_speech(llm_response_text, voiceId)
         
-        return {"text": llm_response_text, "audioUrl": f"{os.environ.get('server_base_url')}/audio/{filename}"}
+        return {"text": llm_response_text, "audioUrl": f"/audio/{filename}"}
     
     except Exception as e:
         # Clean up in case of error
@@ -223,7 +223,7 @@ async def translate(request: TranslationRequest):
             raise HTTPException(status_code=500, detail="Failed to generate speech for translation")
         
         return {
-            "audioUrl": f"{os.environ.get('server_base_url')}/audio/{filename}",
+            "audioUrl": f"/audio/{filename}",
             "translatedText": translated_text
         }
     except Exception as e:
