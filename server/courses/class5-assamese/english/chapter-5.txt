@@ -1,0 +1,37 @@
+## Let’s recite the poem:
+
+### **Someone**  
+*By Walter de la Mare*
+
+Someone came knocking  
+At my wee, small door;  
+Someone came knocking,  
+I’m sure—sure—sure;  
+I listened, I opened,  
+I looked to left and right,  
+But nought there was a-stirring  
+In the still, dark night;  
+Only the busy beetle  
+Tap-tapping in the wall,  
+Only from the forest  
+The screech-owl’s call,  
+Only the cricket whistling  
+While the dewdrops fall,  
+So I know not who can be knocking,  
+At all, at all, at all.
+
+---
+
+## Let’s see what the words below mean:
+
+| Word       | Meaning                                                              |
+|------------|----------------------------------------------------------------------|
+| wee        | very small in size                                                   |
+| nought     | nothing                                                              |
+| stirring   | moving                                                               |
+| beetle     | an insect                                                            |
+| screech    | a loud unpleasant sound                                              |
+| cricket    | a small jumping insect that makes a loud sound                      |
+| whistling  | making a musical tune with lips                                      |
+| dew        | a very small drop of water that falls on the ground                 |
+
